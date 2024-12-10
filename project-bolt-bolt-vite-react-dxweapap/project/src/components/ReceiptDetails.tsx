@@ -1,0 +1,55 @@
+import React from 'react';
+import { Calendar, DollarSign, Store } from 'lucide-react';
+import { Receipt } from '../types';
+import { format } from 'date-fns';
+
+interface ReceiptDetailsProps {
+  receipt: Receipt;
+  onSetReminder: (date: string) => void;
+}
+
+export function ReceiptDetails({ receipt, onSetReminder }: ReceiptDetailsProps) {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold mb-4">Receipt Details</h3>
+      
+      {receipt.store && (
+        <div className="flex items-center space-x-2">
+          <Store className="w-5 h-5 text-blue-400" />
+          <span>{receipt.store}</span>
+        </div>
+      )}
+      
+      {receipt.amount && (
+        <div className="flex items-center space-x-2">
+          <DollarSign className="w-5 h-5 text-green-400" />
+          <span>{receipt.amount}</span>
+        </div>
+      )}
+      
+      <div className="flex items-center space-x-2">
+        <Calendar className="w-5 h-5 text-purple-400" />
+        <span>{format(new Date(receipt.date), 'PPP')}</span>
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-sm font-medium mb-2">
+          Set Reminder Date
+        </label>
+        <input
+          type="date"
+          className="bg-gray-700 rounded-md px-3 py-2 w-full"
+          onChange={(e) => onSetReminder(e.target.value)}
+          min={new Date().toISOString().split('T')[0]}
+        />
+      </div>
+
+      <div className="mt-4">
+        <h4 className="text-lg font-medium mb-2">Extracted Text</h4>
+        <pre className="bg-gray-900 p-4 rounded-lg text-sm overflow-auto max-h-48">
+          {receipt.text}
+        </pre>
+      </div>
+    </div>
+  );
+}
